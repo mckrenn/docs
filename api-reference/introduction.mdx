@@ -1,33 +1,59 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'Introdução'
+description: 'API GoHusky - Plataforma de logística para delivery e entregas'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## Bem-vindo
 
-## Welcome
+A API da Husky é uma plataforma de logística para delivery e entregas. Aqui você encontra todas as informações necessárias para integrar o sistema Husky em seu aplicativo ou sistema.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Ambientes
+
+A API está disponível em dois ambientes:
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="Sandbox"
+  icon="flask"
 >
-  View the OpenAPI specification file
+  **https://sandbox.api.gohusky.net** - Ambiente de Homologação, use para testes e desenvolvimento.
 </Card>
 
-## Authentication
+<Card
+  title="Produção"
+  icon="rocket"
+>
+  **https://api.gohusky.net** - Ambiente de Produção, use para produção.
+</Card>
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+## Autenticação
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+Todas as requisições à API da Husky devem ser autenticadas por meio de um **token**. O token serve não só para autenticar a requisição, mas também para identificar se a requisição é de um embarcador ou de uma operação.
+
+<Warning>
+**Por exemplo:** Se for feito o cadastro de uma URL de webhook para eventos de entregas usando o token de um embarcador, só será notificado os eventos de entregas desse embarcador. Se for feito o cadastro de uma URL de webhook usando o token de uma operação, será notificado os eventos de entregas de todos os embarcadores.
+</Warning>
+
+### Autenticação como Operação
+
+Para autenticar como Operação, deve ser passado via _query parameter_ o _token_ da Operação e o _customer_ com valor `false`.
+
+### Autenticação como Embarcador
+
+Para autenticar como Embarcador, deve ser passado via _query parameter_ o _token_ do Embarcador e o _customer_ com valor `true`.
+
+### Autenticação em endpoints v2
+
+Para autenticar em endpoints v2, deve ser passado via _header_ o _token_ do Embarcador. Não precisa passar o _customer_.
+
+## Estrutura da Documentação
+
+Esta documentação está organizada em seções para facilitar a navegação:
+
+- **Embarcadores**: Gerenciamento de embarcadores na plataforma
+- **Entregas**: Criação e gerenciamento de entregas
+- **Entregadores**: Informações sobre entregadores
+- **webhooks**: Configuração de notificações por webhook
+
+<Tip>
+Consulte a [Especificação OpenAPI completa](/api-reference/openapi.json) para mais detalhes sobre todos os endpoints disponíveis.
+</Tip>
