@@ -1,0 +1,30 @@
+---
+title: 'Evento'
+openapi: 'WEBHOOK /event'
+description: |-
+    Trabalhamos com webhooks para notificações de eventos do sistema Husky. Para receber as notificações, é necessário cadastrar a URL de destino e o tipo de evento que será notificado.
+
+    ### Eventos de Entrega
+    | Evento               | Descrição                                                                              |
+    | -------------------- | -------------------------------------------------------------------------------------- |
+    | ORDER_CREATED        | Disparado quando uma nova entrega é criada                                             |
+    | ORDER_UPDATED        | Disparado quando uma entrega é atualizada                                              |
+    | ORDER_STATUS_UPDATED | Disparado quando o status de uma entrega é atualizado (ex: coletando, entregando, etc) |
+    | ORDER_DRIVER_UPDATED | Disparado quando alterado o entregador de uma entrega                                  |
+
+    ### Eventos de Entregador
+    | Evento                | Descrição                                      |
+    | --------------------- | --------------------------------------------------------------------------- |
+    | FLEET_QUEUE           | Disparado quando um entregador sai da cerca virtual do embarcador           |
+    | DRIVER_CREATED        | Disparado quando um novo entregador é criado                                |
+    | DRIVER_UPDATED        | Disparado quando alterado algum dado de um entregador                       |
+    | DRIVER_STATUS_UPDATED | Disparado quando alterado o status do entregador (ex: inativado no sistema) |
+
+    ### Eventos de Embarcador
+    | Evento                | Descrição                                             |
+    | --------------------- | ----------------------------------------------------- |
+    | CLIENT_CREATED        | Disparado quando um novo embarcador é criado          |
+    | CLIENT_UPDATED        | Disparado quando alterado os dados de um embarcador   |
+    | CLIENT_STATUS_UPDATED | Disparado quando alterado o status de um embarcador   |
+    
+---

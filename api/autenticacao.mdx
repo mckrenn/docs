@@ -1,0 +1,142 @@
+---
+title: 'Autenticação'
+description: 'Como autenticar requisições na API GoHusky'
+---
+
+## Visão Geral
+
+Todas as requisições à API da Husky devem ser autenticadas por meio de um **token**. O token serve não só para autenticar a requisição, mas também para identificar se a requisição é de um embarcador ou de uma operação.
+
+## Tipos de Autenticação
+
+### Autenticação como Operação
+
+Para autenticar como Operação (Operador Logístico), deve ser passado via _query parameter_:
+- `token`: Token da Operação
+- `customer`: `false`
+
+<CodeGroup>
+
+```bash CURL
+curl -X POST "https://api.gohusky.net/createStore?token=SUA_TOKEN_OPERACAO&customer=false"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.gohusky.net/createStore?token=SUA_TOKEN_OPERACAO&customer=false', {
+  method: 'POST'
+});
+```
+
+```python Python
+import requests
+
+url = "https://api.gohusky.net/createStore"
+params = {
+    "token": "SUA_TOKEN_OPERACAO",
+    "customer": "false"
+}
+response = requests.post(url, params=params)
+```
+
+</CodeGroup>
+
+### Autenticação como Embarcador
+
+Para autenticar como Embarcador (Restaurante, loja, farmácia), deve ser passado via _query parameter_:
+- `token`: Token do Embarcador
+- `customer`: `true`
+
+<CodeGroup>
+
+```bash CURL
+curl -X POST "https://api.gohusky.net/createOrderList?token=SUA_TOKEN_EMBARCADOR&customer=true"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.gohusky.net/createOrderList?token=SUA_TOKEN_EMBARCADOR&customer=true', {
+  method: 'POST'
+});
+```
+
+```python Python
+import requests
+
+url = "https://api.gohusky.net/createOrderList"
+params = {
+    "token": "SUA_TOKEN_EMBARCADOR",
+    "customer": "true"
+}
+response = requests.post(url, params=params)
+```
+
+</CodeGroup>
+
+### Autenticação em endpoints v2
+
+Para autenticar em endpoints v2, deve ser passado via _header_:
+- `Token`: Token do Embarcador
+- Não precisa passar o `customer`
+
+<CodeGroup>
+
+```bash CURL
+curl -X POST "https://api.gohusky.net/v2/getOrderStatus" \
+  -H "Token: SUA_TOKEN_EMBARCADOR"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.gohusky.net/v2/getOrderStatus', {
+  method: 'POST',
+  headers: {
+    'Token': 'SUA_TOKEN_EMBARCADOR'
+  }
+});
+```
+
+```python Python
+import requests
+
+url = "https://api.gohusky.net/v2/getOrderStatus"
+headers = {
+    "Token": "SUA_TOKEN_EMBARCADOR"
+}
+response = requests.post(url, headers=headers)
+```
+
+</CodeGroup>
+
+## Escopo de Notificações
+
+<Warning>
+**Importante:** O escopo das notificações depende do tipo de token utilizado:
+
+- Se for feito o cadastro de uma URL de webhook para eventos de entregas usando o token de um **embarcador**, só será notificado os eventos de entregas desse embarcador.
+- Se for feito o cadastro de uma URL de webhook para eventos de entregas usando o token de uma **operação**, será notificado os eventos de entregas de todos os embarcadores.
+</Warning>
+
+## Respostas de Erro
+
+### 401 - Token inválido ou não autorizado
+
+```json
+{
+  "success": 0,
+  "message": "Token inválido ou não autorizado"
+}
+```
+
+### 404 - Token não informado corretamente
+
+```json
+{
+  "success": 0,
+  "message": "Token não informado corretamente"
+}
+```
+
+## Próximos Passos
+
+- Veja como [cadastrar um embarcador](/api-reference/embarcadores/create-store)
+- Aprenda a [criar uma entrega](/api-reference/entregas/create-order-list)
+- Configure [webhooks e notificações](/api-reference/notificacoes/create-notification)
+

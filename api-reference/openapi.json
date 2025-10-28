@@ -10,17 +10,24 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
+      "url": "https://sandbox.api.gohusky.net",
+      "description": "Homologação para testes"
+    },
     {
-      "bearerAuth": []
+      "url": "https://api.gohusky.net",
+      "description": "Produção"
     }
   ],
   "paths": {
     "/plants": {
       "get": {
+          "security": [
+    {
+      "TokenQuery": ["token"],
+      "CustomerQuery": ["customer"]
+    }
+  ],
+
         "description": "Returns all plants from the system that the user has access to",
         "parameters": [
           {
@@ -139,7 +146,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/Event"
               }
             }
           }
@@ -155,6 +162,22 @@
   "components": {
     "schemas": {
       "Plant": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the plant",
+            "type": "string"
+          },
+          "tag": {
+            "description": "Tag to specify the type",
+            "type": "string"
+          }
+        }
+      },
+      "Plant2": {
         "required": [
           "name"
         ],
@@ -190,6 +213,87 @@
           }
         ]
       },
+      "Event": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "eventType",
+          "mapping": {
+            "plantAdded": "#/components/schemas/PlantAddedEvent",
+            "plantRemoved": "#/components/schemas/PlantRemovedEvent"
+          }
+        },
+        "properties": {
+          "eventType": {
+            "type": "string",
+            "enum": [
+              "plantAdded",
+              "plantRemoved"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PlantAddedEvent": {
+        "description": "Event triggered when a new plant is added to the store",
+        "summary": "Plant Added Event",
+        "title": "PlantAddedEvent",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Event"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tag": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "PlantRemovedEvent": {
+        "title": "PlantRemovedEvent",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Event"
+          },
+          {
+            "title": "PlantRemovedEventDetails",
+            "type": "object",
+            "properties": {
+                                "eventType": {
+                    "type": "string",
+                    "example": "plantRemoved"
+                  }
+,
+              "resource": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
       "Error": {
         "required": [
           "error",
@@ -211,6 +315,16 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer"
+      },
+      "TokenQuery": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "token"
+      },
+      "CustomerQuery": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "customer"
       }
     }
   }

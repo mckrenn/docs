@@ -51,18 +51,44 @@
         "tab": "API reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Introdução",
             "pages": [
-              "api-reference/introduction"
+              "api/introduction",
+              "api/autenticacao"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Embarcadores",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api/embarcadores/create-store",
+              "api/embarcadores/import-kml",
+              "api/embarcadores/nearest-store"
+            ]
+          },
+          {
+            "group": "Entregas",
+            "pages": [
+              "api/entregas/check-order-price",
+              "api/entregas/create-order-list",
+              "api/entregas/get-order-status",
+              "api/entregas/order-ready",
+              "api/entregas/unfinished-status-reasons",
+              "api/entregas/update-order-status"
+            ]
+          },
+          {
+            "group": "Entregadores",
+            "pages": [
+              "api/entregadores/get-fleet-details"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "api/webhooks/list-notifications",
+              "api/webhooks/create-notification",
+              "api/webhooks/delete-notification",
+              "api/webhooks/webhook"
             ]
           }
         ]
