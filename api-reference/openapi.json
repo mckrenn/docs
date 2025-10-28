@@ -1306,9 +1306,9 @@
                           "description": "Informações do pacote da entrega",
                           "properties": {
                             "size": {
-                              "type": "string",
+                              "type": "integer",
                               "description": "Tamanho do pacote da entrega",
-                              "example": "0"
+                              "example": 0
                             }
                           }
                         },
