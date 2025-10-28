@@ -153,8 +153,8 @@
         "discriminator": {
           "propertyName": "event",
           "mapping": {
-            "ORDER_CREATED": "#/components/schemas/EventOrderResourceCreatedOrUpdated",
-            "ORDER_UPDATED": "#/components/schemas/EventOrderResourceCreatedOrUpdated",
+            "ORDER_CREATED": "#/components/schemas/EventOrderResourceCreated",
+            "ORDER_UPDATED": "#/components/schemas/EventOrderResourceUpdated",
             "ORDER_STATUS_UPDATED": "#/components/schemas/EventOrderResourceStatusUpdated",
             "ORDER_DRIVER_UPDATED": "#/components/schemas/EventOrderResourceDriverUpdated",
             "CLIENT_CREATED": "#/components/schemas/EventClientResourceCreatedOrUpdated",
@@ -194,16 +194,13 @@
           }
         }
       },
-      "EventOrderResourceCreatedOrUpdated": {
+      "EventOrderResourceCreated": {
         "description": "Resource",
         "allOf": [
           {
-            "$ref": "#/components/schemas/WebhookEvent"
-          },
-          {
-            "type": "object"
-          },
-          {
+            "$ref": "#/components/schemas/WebhookEvent",
+            "title": "ORDER_CREATED",
+            "type": "object",
             "properties": {
               "event_context": {
                 "type": "string",
@@ -214,14 +211,7 @@
                 "type": "string",
                 "description": "Token do embarcador",
                 "example": "1234567890"
-              }
-            }
-          },
-          {
-            "type": "object"
-          },
-          {
-            "properties": {
+              },
               "resource": {
                 "type": "object",
                 "properties": {
@@ -516,6 +506,15 @@
           }
         ]
       },
+      "EventOrderResourceUpdated": {
+        "description": "Resource",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EventOrderResourceCreated",
+            "title": "ORDER_UPDATED"
+          }
+        ]
+      },
       "EventOrderResourceStatusUpdated": {
         "description": "Resource",
         "allOf": [
@@ -523,6 +522,7 @@
             "$ref": "#/components/schemas/WebhookEvent"
           },
           {
+            "title": "ORDER_STATUS_UPDATED",
             "type": "object"
           },
           {
@@ -587,12 +587,9 @@
         "description": "Resource",
         "allOf": [
           {
-            "$ref": "#/components/schemas/WebhookEvent"
-          },
-          {
-            "type": "object"
-          },
-          {
+            "$ref": "#/components/schemas/WebhookEvent",
+            "title": "ORDER_DRIVER_UPDATED",
+            "type": "object",
             "properties": {
               "event_context": {
                 "type": "string",
@@ -603,14 +600,7 @@
                 "type": "string",
                 "description": "Token do embarcador",
                 "example": "1234567890"
-              }
-            }
-          },
-          {
-            "type": "object"
-          },
-          {
-            "properties": {
+              },
               "resource": {
                 "type": "object",
                 "properties": {
@@ -1306,7 +1296,7 @@
                           "description": "Informações do pacote da entrega",
                           "properties": {
                             "size": {
-                              "type": "integer",
+                              "type": "number",
                               "description": "Tamanho do pacote da entrega",
                               "example": 0
                             }
@@ -1524,32 +1514,58 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "properties": {
-                      "success": {
-                        "description": "Qualquer valor diferente de 1 indica que ocorreu um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "message": {
-                        "description": "Mensagem de retorno da solicitação",
-                        "type": "string",
-                        "example": "Solicitação recebida com sucesso!"
-                      },
-                      "tracking": {
-                        "description": "Identificador da entrega",
-                        "type": "string",
-                        "example": "6b0187ae9bb6a5cb809308508133d32e83c5efe0e9fb297fea8283505a3b23dc"
-                      },
-                      "orderId": {
-                        "description": "Número da entrega na operação",
-                        "type": "string",
-                        "example": "123"
-                      }
+                  "oneOf": [
+                    {
+                      "title": "Sucesso",
+                      "description": "Propriedade 'success' igual a 1 indica que a solicitação foi processada com sucesso.",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "success": {
+                            "description": "**IMPORTANTE:** se o valor for diferente de 1, houve um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "message": {
+                            "description": "Mensagem de retorno da solicitação",
+                            "type": "string",
+                            "example": "Solicitação recebida com sucesso!"
+                          },
+                          "tracking": {
+                            "description": "Identificador da entrega",
+                            "type": "string",
+                            "example": "6b0187ae9bb6a5cb809308508133d32e83c5efe0e9fb297fea8283505a3b23dc"
+                          },
+                          "orderId": {
+                            "description": "Número da entrega na operação",
+                            "type": "string",
+                            "example": "123"
+                          }
+                        },
+                        "type": "object"
+                      }    
                     },
-                    "type": "object"
-                  }
+                    {
+                      "title": "Erro",
+                      "description": "Propriedade 'success' diferente de 1 indica que ocorreu um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "success": {
+                            "description": "Qualquer valor diferente de 1 indica que ocorreu um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
+                            "type": "integer",
+                            "example": 3
+                          },
+                          "message": {
+                            "description": "Mensagem de retorno da solicitação",
+                            "type": "string",
+                            "example": "Ocorreu algum erro, tente novamente. Caso persista entre em contato conosco"
+                          }
+                        },
+                        "type": "object"
+                      }    
+                    }
+                  ]
                 }
               }
             }
@@ -2771,7 +2787,7 @@
     }
   },
   "webhooks": {
-    "/event": {
+    "/": {
       "post": {
         "operationId": "events",
         "tags": [
