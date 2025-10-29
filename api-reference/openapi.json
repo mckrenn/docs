@@ -1510,7 +1510,7 @@
         },
         "responses": {
           "200": {
-            "description": "Requisição processada com sucesso",
+            "description": "Requisição processada com sucesso. \n\n**IMPORTANTE:** se o valor do campo 'success' for diferente de 1, houve um erro na criação da entrega. Em caso de erro, valide o campo 'message' para mais detalhes.",
             "content": {
               "application/json": {
                 "schema": {
