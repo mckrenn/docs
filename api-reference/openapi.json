@@ -1486,7 +1486,7 @@
                             "geocoding": {
                               "type": "boolean",
                               "description": "Define se a API deve geocodificar automaticamente o endereço informado",
-                              "example": true
+                              "example": false
                             },
                             "lat": {
                               "type": "string",

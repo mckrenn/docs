@@ -1,0 +1,127 @@
+{
+    "components": {
+        "schemas": {
+            "EventEnum": {
+                "type": "string",
+                "enum": [
+                    "ORDER_STATUS_UPDATED",
+                    "FLEET_QUEUE",
+                    "ORDER_CREATED",
+                    "ORDER_UPDATED",
+                    "ORDER_DRIVER_UPDATED",
+                    "DRIVER_CREATED",
+                    "DRIVER_UPDATED",
+                    "DRIVER_STATUS_UPDATED",
+                    "CLIENT_CREATED",
+                    "CLIENT_UPDATED",
+                    "CLIENT_STATUS_UPDATED",
+                    "all"
+                ],
+                "example": "ORDER_STATUS_UPDATED",
+                "description": "Tipo de evento para notificação. Para mais detalhes sobre os possíveis eventos, consulte a seção [Webhooks](/api-reference/webhooks/webhook).\n<br>\nSe informado ```all```, todos os eventos que existem hoje (e futuros) serão notificados."
+            }
+        },
+        "parameters": {
+            "live_mode": {
+                "name": "live_mode",
+                "in": "query",
+                "description": "Especifica o ambiente para executar a requisição.",
+                "required": true,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "customer": {
+                "name": "customer",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "boolean"
+                },
+                "description": "Define o tipo de autenticação: \n`true` = Embarcador (Restaurante, Loja, Farmácia) \n`false` = Operação (Operador Logístico)"
+            }  
+        },
+        "securitySchemes": {
+            "TokenQuery": {
+                "type": "apiKey",
+                "description": "Token de autenticação via query parameter. Pode representar o ID público da operação (Operador Logístico) ou o ID público do embarcador (Restaurante, loja, farmácia).",
+                "name": "token",
+                "in": "query"
+            },
+            "CustomerQuery": {
+                "type": "apiKey",
+                "in": "query",
+                "name": "customer",
+                "description": "Define qual tipo de token está sendo utilizado."
+            },
+            "TokenHeader": {
+                "type": "apiKey",
+                "description": "Token de autenticação via header. Utilizado exclusivamente para endpoints v2. Deve ser o token do embarcador.",
+                "name": "Token",
+                "in": "header"
+            }
+        },
+        "responses": {
+            "401": {
+                "description": "Token inválido ou não autorizado",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "integer",
+                                    "example": 0
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Token inválido ou não autorizado"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "404": {
+                "description": "Token não informado corretamente",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "integer",
+                                    "example": 0
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Token não informado corretamente"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "405": {
+                "description": "Método não permitido",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "integer",
+                                    "example": 0
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Método não permitido, consulte a documentação."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

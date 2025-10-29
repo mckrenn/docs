@@ -1,0 +1,391 @@
+{
+    "path": "/createOrderList",
+    "methods": {
+        "post": {
+            "operationId": "createOrdersList",
+            "tags": [
+                "Entregas"
+            ],
+            "summary": "Criação de entrega",
+            "description": "Cria uma entrega no sistema. Pode ser uma entrega individual ou múltiplas entregas em lote.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "required": [
+                                    "specifications",
+                                    "addresses"
+                                ],
+                                "properties": {
+                                    "specifications": {
+                                        "description": "Especificações da entrega",
+                                        "required": [
+                                            "origin",
+                                            "return",
+                                            "geocoding",
+                                            "orderId",
+                                            "token",
+                                            "package"
+                                        ],
+                                        "properties": {
+                                            "origin": {
+                                                "type": "string",
+                                                "description": "Identificação da origem da entrega (ex.: Nome PDV, Televendas, etc.)",
+                                                "example": "NomeDoSeuSistema"
+                                            },
+                                            "return": {
+                                                "type": "boolean",
+                                                "description": "Indica se a entrega terá retorno para a origem",
+                                                "example": false
+                                            },
+                                            "geocoding": {
+                                                "type": "boolean",
+                                                "description": "Define se a API deve geocodificar automaticamente o endereço informado",
+                                                "example": false
+                                            },
+                                            "orderId": {
+                                                "type": "string",
+                                                "description": "Número de identificação da entrega em um sistema externo",
+                                                "example": "01"
+                                            },
+                                            "token": {
+                                                "type": "string",
+                                                "description": "Token da Embarcador/loja relacionado à entrega",
+                                                "example": "Token-Loja/embarcador/Restaurante"
+                                            },
+                                            "startDate": {
+                                                "type": "string",
+                                                "description": "Data e hora em que o serviço deve ser realizado (fuso horário UTC)",
+                                                "format": "datetime",
+                                                "example": "02/01/2006 15:04:05"
+                                            },
+                                            "package": {
+                                                "type": "object",
+                                                "description": "Informações do pacote da entrega",
+                                                "properties": {
+                                                    "size": {
+                                                        "type": "number",
+                                                        "description": "Tamanho do pacote da entrega",
+                                                        "example": 0
+                                                    }
+                                                }
+                                            },
+                                            "ifood_reference": {
+                                                "type": "string",
+                                                "description": "Se for uma entrega para um pedido do iFood, informe o código localizador do pedido iFood",
+                                                "example": "12345678"
+                                            }
+                                        }
+                                    },
+                                    "addresses": {
+                                        "description": "Pontos da entrega (Ponto de entrega e Ponto de coleta)",
+                                        "type": "object",
+                                        "required": [
+                                            "dropoff"
+                                        ],
+                                        "properties": {
+                                            "dropoff": {
+                                                "description": "Ponto de entrega",
+                                                "required": [
+                                                    "name",
+                                                    "phone",
+                                                    "address",
+                                                    "streetNumber",
+                                                    "neighborhood",
+                                                    "city",
+                                                    "state",
+                                                    "country",
+                                                    "lat",
+                                                    "lng",
+                                                    "payment"
+                                                ],
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "Nome do destinatário",
+                                                        "example": "Francisco"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string",
+                                                        "description": "Telefone do destinatário",
+                                                        "example": "00000000000"
+                                                    },
+                                                    "address": {
+                                                        "type": "string",
+                                                        "description": "Endereço completo de entrega",
+                                                        "example": "R. Xavier Curado"
+                                                    },
+                                                    "streetNumber": {
+                                                        "type": "string",
+                                                        "description": "Número do endereço de entrega",
+                                                        "example": "25"
+                                                    },
+                                                    "comp": {
+                                                        "type": "string",
+                                                        "description": "Complemento do endereço de entrega",
+                                                        "example": "apto"
+                                                    },
+                                                    "neighborhood": {
+                                                        "type": "string",
+                                                        "description": "Bairro do endereço de entrega",
+                                                        "example": "Ipiranga"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "description": "Cidade do endereço de entrega",
+                                                        "example": "São Paulo"
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "description": "Estado do endereço de entrega",
+                                                        "example": "São paulo"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "description": "País do endereço de entrega",
+                                                        "example": "Brasil"
+                                                    },
+                                                    "obs": {
+                                                        "type": "string",
+                                                        "description": "Observações adicionais do endereço de entrega",
+                                                        "example": "Observações adicionais"
+                                                    },
+                                                    "lat": {
+                                                        "type": "string",
+                                                        "description": "Latitude do endereço de entrega",
+                                                        "example": "-23.584644"
+                                                    },
+                                                    "lng": {
+                                                        "type": "string",
+                                                        "description": "Longitude do endereço de entrega",
+                                                        "example": "-46.608366"
+                                                    },
+                                                    "useSavedAddress": {
+                                                        "type": "boolean",
+                                                        "description": "Indica se deve ser usado o endereço salvo na base de contatos para o destinatário. \\\n`true` = Ignora o endereço informado e usa o endereço salvo na base de contatos. Se não houver endereço salvo, será usado o endereço informado. \\\n`false` = Usa o endereço informado",
+                                                        "example": false
+                                                    },
+                                                    "payment": {
+                                                        "required": [
+                                                            "method",
+                                                            "value"
+                                                        ],
+                                                        "properties": {
+                                                            "method": {
+                                                                "description": "Método de pagamento",
+                                                                "enum": [
+                                                                    "ONLINE",
+                                                                    "CASH",
+                                                                    "TERMINAL"
+                                                                ],
+                                                                "example": "ONLINE"
+                                                            },
+                                                            "value": {
+                                                                "description": "Valor do pagamento",
+                                                                "type": "number",
+                                                                "example": 100
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "pickup": {
+                                                "description": "(Opcional) Ponto de coleta. Se não for enviado, será usado o endereço cadastrado em nosso sistema para a loja.",
+                                                "required": [
+                                                    "name",
+                                                    "phone",
+                                                    "address",
+                                                    "streetNumber",
+                                                    "neighborhood",
+                                                    "city",
+                                                    "state",
+                                                    "country",
+                                                    "obs",
+                                                    "geocoding",
+                                                    "lat",
+                                                    "lng"
+                                                ],
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "Nome do remetente",
+                                                        "example": "Nome do remetente"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string",
+                                                        "description": "Telefone do remetente",
+                                                        "example": "00000000000"
+                                                    },
+                                                    "address": {
+                                                        "type": "string",
+                                                        "description": "Endereço de coleta",
+                                                        "example": "Endereço de coleta"
+                                                    },
+                                                    "streetNumber": {
+                                                        "type": "string",
+                                                        "description": "Número do endereço de coleta",
+                                                        "example": "123"
+                                                    },
+                                                    "neighborhood": {
+                                                        "type": "string",
+                                                        "description": "Bairro do endereço de coleta",
+                                                        "example": "Centro"
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "description": "Cidade do endereço de coleta",
+                                                        "example": "São Paulo"
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "description": "Estado do endereço de coleta",
+                                                        "example": "SP"
+                                                    },
+                                                    "country": {
+                                                        "type": "string",
+                                                        "description": "País do endereço de coleta",
+                                                        "example": "Brasil"
+                                                    },
+                                                    "obs": {
+                                                        "type": "string",
+                                                        "description": "Observações do endereço de coleta",
+                                                        "example": "Observações"
+                                                    },
+                                                    "geocoding": {
+                                                        "type": "boolean",
+                                                        "description": "Define se a API deve geocodificar automaticamente o endereço informado",
+                                                        "example": false
+                                                    },
+                                                    "lat": {
+                                                        "type": "string",
+                                                        "description": "Latitude do endereço de coleta",
+                                                        "example": "-23.584644"
+                                                    },
+                                                    "lng": {
+                                                        "type": "string",
+                                                        "description": "Longitude do endereço de coleta",
+                                                        "example": "-46.608366"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Requisição processada com sucesso. \n\n**IMPORTANTE:** se o valor do campo 'success' for diferente de `1`, houve um erro na criação da entrega. Em caso de erro, valide o campo 'message' para mais detalhes.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "oneOf": [
+                                    {
+                                        "title": "Sucesso",
+                                        "description": "Entrega criada com sucesso.",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "success": {
+                                                    "description": "Indica se a requisição foi processada com sucesso. `1` = Sucesso, qualquer outro valor indica que houve um erro.",
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "message": {
+                                                    "description": "Mensagem de retorno da solicitação",
+                                                    "type": "string",
+                                                    "example": "Solicitação recebida com sucesso!"
+                                                },
+                                                "tracking": {
+                                                    "description": "Identificador da entrega",
+                                                    "type": "string",
+                                                    "example": "6b0187ae9bb6a5cb809308508133d32e83c5efe0e9fb297fea8283505a3b23dc"
+                                                },
+                                                "orderId": {
+                                                    "description": "Número da entrega na operação",
+                                                    "type": "string",
+                                                    "example": "123"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }        
+                                    },
+                                    {
+                                        "title": "Erro",
+                                        "description": "Houve um erro na criação da entrega, valide o campo 'message' para mais detalhes.",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "success": {
+                                                    "description": "Indica se a requisição foi processada com sucesso. `1` = Sucesso, qualquer outro valor indica que houve um erro.",
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "message": {
+                                                    "description": "Mensagem de retorno da solicitação",
+                                                    "type": "string",
+                                                    "example": "Ocorreu algum erro, tente novamente. Caso persista entre em contato conosco"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }        
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Requisição inválida",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Verifique o payload da request."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

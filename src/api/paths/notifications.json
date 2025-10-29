@@ -1,0 +1,195 @@
+{
+    "path": "/notifications",
+    "methods": {
+        "get": {
+            "operationId": "listNotifications",
+            "tags": [
+                "Notificações"
+            ],
+            "summary": "Lista de webhooks",
+            "description": "Recupera uma lista de webhooks do usuário autenticado.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Lista de notificações obtida com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "ID da notificação",
+                                            "example": "NTF-5e42e2b9f3645"
+                                        },
+                                        "event": {
+                                            "description": "Tipo de evento",
+                                            "$ref": "#/components/schemas/EventEnum"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "description": "URL para receber as notificações",
+                                            "example": "https://www.seusite.com.br/url"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        },
+        "post": {
+            "operationId": "createNotification",
+            "tags": [
+                "Notificações"
+            ],
+            "summary": "Criar Webhook",
+            "description": "Cria um webhook para receber notificações em tempo real sobre eventos do sistema.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "event",
+                                "url"
+                            ],
+                            "properties": {
+                                "event": {
+                                    "description": "Tipo de evento para notificar por webhook",
+                                    "$ref": "#/components/schemas/EventEnum"
+                                },
+                                "url": {
+                                    "description": "URL para receber as notificações por webhook",
+                                    "type": "string",
+                                    "example": "https://www.seusite.com.br/url"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Notificação cadastrada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "ID da notificação",
+                                            "example": "NTF-5e42e35a958f0"
+                                        },
+                                        "event": {
+                                            "description": "Tipo de evento cadastrado",
+                                            "$ref": "#/components/schemas/EventEnum"
+                                        },
+                                        "url": {
+                                            "type": "string",
+                                            "description": "URL para receber as notificações",
+                                            "example": "https://www.seusite.com.br/url"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro ao cadastrar notificação"
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        },
+        "delete": {
+            "operationId": "deleteNotification",
+            "tags": [
+                "Notificações"
+            ],
+            "summary": "Deletar Webhook",
+            "description": "Deleta um webhook existente.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "name": "notification",
+                    "in": "query",
+                    "description": "ID do webhook a ser deletado",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "204": {
+                    "description": "Webhook deletado com sucesso"
+                },
+                "400": {
+                    "description": "ID do webhook não informado"
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "description": "Webhook não encontrado"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

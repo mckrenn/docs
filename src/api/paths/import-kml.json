@@ -1,0 +1,97 @@
+{
+  "path": "/importKML",
+  "methods": {
+    "post": {
+      "operationId": "importKML",
+      "tags": [
+        "Embarcadores"
+      ],
+      "summary": "Importação de KML",
+      "description": "Importa um KML para o embarcador.",
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/live_mode"
+        },
+        {
+          "$ref": "#/components/parameters/customer"
+        }
+      ],
+      "requestBody": {
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "properties": {
+                "kml": {
+                  "description": "Arquivo KML para importação",
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "type": "object"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "KML importado com sucesso",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "integer",
+                    "description": "Qualquer valor diferente de 1 indica que ocorreu um erro na importação do KML. Em caso de erro, valide o campo message para mais detalhes.",
+                    "example": 1
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Mensagem de retorno da solicitação",
+                    "example": "KML importado com sucesso!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Erro ao importar KML",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "integer",
+                    "description": "Código de erro",
+                    "example": 0
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Mensagem de erro",
+                    "example": "O arquivo enviado não é um KML"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "$ref": "#/components/responses/401"
+        },
+        "404": {
+          "$ref": "#/components/responses/404"
+        },
+        "405": {
+          "$ref": "#/components/responses/405"
+        }
+      },
+      "security": [
+        {
+          "TokenQuery": []
+        }
+      ]
+    }
+  }
+}

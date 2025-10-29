@@ -1,0 +1,210 @@
+{
+    "path": "/checkOrderPrice",
+    "methods": {
+        "post": {
+            "operationId": "checkOrderPrice",
+            "tags": [
+                "Entregas"
+            ],
+            "summary": "Cotação de entrega",
+            "description": "Solicita a cotação de uma entrega. Retorna o valor e distância da entrega.\n<br><br>\n**Rate Limit:** 100 requisições por minuto.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "token",
+                                "geocoding",
+                                "return",
+                                "destiny"
+                            ],
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "description": "Token do embarcador",
+                                    "example": "4156165165165165165165165165165165165165165165165165165165165165"
+                                },
+                                "geocoding": {
+                                    "type": "boolean",
+                                    "description": "Define se a API deve geocodificar automaticamente o endereço informado",
+                                    "example": true
+                                },
+                                "return": {
+                                    "description": "Define se a entrega terá retorno para a origem. \n<br>\ntrue = Retorno para a origem\n<br>\nfalse = Não tem retorno para a origem",
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "pickup": {
+                                    "type": "object",
+                                    "description": "(Opcional) Ponto de coleta da entrega. Caso não seja informado, será usado o endereço cadastrado em nosso sistema para o embarcador.",
+                                    "required": [
+                                        "address",
+                                        "lat",
+                                        "lng",
+                                        "streetNumber",
+                                        "neighborhood",
+                                        "city",
+                                        "state",
+                                        "country"
+                                    ],
+                                    "properties": {
+                                        "address": {
+                                            "type": "string",
+                                            "description": "Endereço de coleta",
+                                            "example": "Francisco Cabeda"
+                                        },
+                                        "lat": {
+                                            "type": "number",
+                                            "description": "Latitude do endereço de coleta",
+                                            "format": "float",
+                                            "example": -30
+                                        },
+                                        "lng": {
+                                            "type": "number",
+                                            "description": "Longitude do endereço de coleta",
+                                            "format": "float",
+                                            "example": -50
+                                        },
+                                        "streetNumber": {
+                                            "type": "string",
+                                            "description": "Número do endereço de coleta",
+                                            "example": "81"
+                                        },
+                                        "neighborhood": {
+                                            "type": "string",
+                                            "description": "Bairro do endereço de coleta",
+                                            "example": "Centro"
+                                        },
+                                        "city": {
+                                            "type": "string",
+                                            "description": "Cidade do endereço de coleta",
+                                            "example": "Santana do Livramento"
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "description": "Estado do endereço de coleta",
+                                            "example": "RS"
+                                        },
+                                        "country": {
+                                            "type": "string",
+                                            "description": "País do endereço de coleta",
+                                            "example": "BR"
+                                        }
+                                    }
+                                },
+                                "destiny": {
+                                    "description": "Ponto de entrega",
+                                    "required": [
+                                        "address",
+                                        "lat",
+                                        "lng",
+                                        "streetNumber",
+                                        "neighborhood",
+                                        "city",
+                                        "state",
+                                        "country"
+                                    ],
+                                    "properties": {
+                                        "address": {
+                                            "type": "string",
+                                            "description": "Endereço de entrega",
+                                            "example": "Francisco Cabeda"
+                                        },
+                                        "lat": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "description": "Latitude do endereço de entrega",
+                                            "example": -30
+                                        },
+                                        "lng": {
+                                            "type": "number",
+                                            "description": "Longitude do endereço de entrega",
+                                            "format": "float",
+                                            "example": -50
+                                        },
+                                        "streetNumber": {
+                                            "type": "string",
+                                            "description": "Número do endereço de entrega",
+                                            "example": "81"
+                                        },
+                                        "neighborhood": {
+                                            "type": "string",
+                                            "description": "Bairro do endereço de entrega",
+                                            "example": "Centro"
+                                        },
+                                        "city": {
+                                            "type": "string",
+                                            "description": "Cidade do endereço de entrega",
+                                            "example": "Santana do Livramento"
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "description": "Estado do endereço de entrega",
+                                            "example": "RS"
+                                        },
+                                        "country": {
+                                            "type": "string",
+                                            "description": "País do endereço de entrega",
+                                            "example": "BR"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Cotação realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "price": {
+                                        "type": "string",
+                                        "description": "Valor da entrega",
+                                        "example": "28.30"
+                                    },
+                                    "distance": {
+                                        "type": "number",
+                                        "description": "Distância da entrega",
+                                        "example": 10.123
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro na cotação"
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

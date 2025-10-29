@@ -1,0 +1,62 @@
+{
+    "path": "/unfinishedStatusReasons",
+    "methods": {
+        "get": {
+            "operationId": "unfinishedStatusReasons",
+            "tags": [
+                "Entregas"
+            ],
+            "summary": "Motivos de Status Não Finalizado",
+            "description": "Obtém os motivos disponíveis para alterar uma entrega para o status \"Não Finalizado\".",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Lista de motivos obtida com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "description": "Código do motivo",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "Motivo de não finalização",
+                                            "example": "Cliente não encontrado"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

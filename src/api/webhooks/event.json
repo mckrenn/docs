@@ -1,0 +1,899 @@
+{
+    "schemas": {
+        "DriverObject": {
+            "type": "object",
+            "properties": {
+                "fleet": {
+                    "type": "object",
+                    "description": "Informações do entregador",
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                            "description": "ID do entregador",
+                            "example": 1209
+                        },
+                        "status": {
+                            "type": "integer",
+                            "description": "Status do entregador",
+                            "example": 1
+                        },
+                        "available": {
+                            "type": "integer",
+                            "description": "Indica se o entregador está disponível",
+                            "example": 1
+                        },
+                        "name": {
+                            "type": "string",
+                            "description": "Nome do entregador",
+                            "example": "John Doe"
+                        },
+                        "alias": {
+                            "type": "string",
+                            "description": "Apelido do entregador",
+                            "example": "john"
+                        },
+                        "email": {
+                            "type": "string",
+                            "description": "Email do entregador",
+                            "example": "john@example.com"
+                        },
+                        "photo": {
+                            "type": "string",
+                            "description": "Foto do entregador",
+                            "example": "https://example.com/photo.jpg"
+                        },
+                        "phone": {
+                            "type": "string",
+                            "description": "Telefone do entregador",
+                            "example": "1234567890"
+                        },
+                        "mobilePhone": {
+                            "type": "string",
+                            "description": "Celular do entregador",
+                            "example": "1234567890"
+                        },
+                        "signupDate": {
+                            "type": "string",
+                            "description": "Data de cadastro do entregador (em UTC)",
+                            "example": "2020-06-26 22:24:30"
+                        },
+                        "allocated": {
+                            "type": "object",
+                            "example": null
+                        }
+                    }
+                },
+                "vehicle": {
+                    "type": "object",
+                    "description": "Informações do veículo do entregador",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Tipo de veículo",
+                            "example": "0"
+                        },
+                        "plate": {
+                            "type": "string",
+                            "description": "Placa do veículo",
+                            "example": "ABC1234"
+                        },
+                        "speed": {
+                            "type": "string",
+                            "description": "Velocidade do veículo",
+                            "example": "0.42"
+                        },
+                        "capacity": {
+                            "type": "integer",
+                            "description": "Capacidade do veículo",
+                            "example": 5
+                        }
+                    }
+                },
+                "device": {
+                    "type": "object",
+                    "description": "Informações do dispositivo do entregador",
+                    "properties": {
+                        "battery": {
+                            "type": "integer",
+                            "description": "Bateria do dispositivo",
+                            "example": 0
+                        },
+                        "batteryDatetime": {
+                            "type": "string",
+                            "description": "Data e hora da bateria do dispositivo",
+                            "example": "2020-06-26 22:24:30"
+                        },
+                        "appVersion": {
+                            "type": "string",
+                            "description": "Versão do app do dispositivo",
+                            "example": "1.6.8"
+                        }
+                    }
+                }
+            }
+        },
+        "WebhookEvent": {
+            "type": "object",
+            "discriminator": {
+                "propertyName": "event",
+                "mapping": {
+                    "ORDER_CREATED": "#/components/schemas/EventOrderResourceCreated",
+                    "ORDER_UPDATED": "#/components/schemas/EventOrderResourceUpdated",
+                    "ORDER_STATUS_UPDATED": "#/components/schemas/EventOrderResourceStatusUpdated",
+                    "ORDER_DRIVER_UPDATED": "#/components/schemas/EventOrderResourceDriverUpdated",
+                    "CLIENT_CREATED": "#/components/schemas/EventClientResourceCreatedOrUpdated",
+                    "CLIENT_UPDATED": "#/components/schemas/EventClientResourceCreatedOrUpdated",
+                    "CLIENT_STATUS_UPDATED": "#/components/schemas/EventClientResourceStatusUpdated",
+                    "DRIVER_CREATED": "#/components/schemas/EventDriverResourceCreatedOrUpdated",
+                    "DRIVER_UPDATED": "#/components/schemas/EventDriverResourceCreatedOrUpdated",
+                    "DRIVER_STATUS_UPDATED": "#/components/schemas/EventDriverResourceStatusUpdated",
+                    "FLEET_QUEUE": "#/components/schemas/EventFleetQueue"
+                }
+            },
+            "properties": {
+                "event": {
+                    "type": "string",
+                    "enum": [
+                        "ORDER_CREATED",
+                        "ORDER_UPDATED",
+                        "ORDER_STATUS_UPDATED",
+                        "ORDER_DRIVER_UPDATED",
+                        "CLIENT_CREATED",
+                        "CLIENT_UPDATED",
+                        "CLIENT_STATUS_UPDATED",
+                        "DRIVER_CREATED",
+                        "DRIVER_UPDATED",
+                        "DRIVER_STATUS_UPDATED",
+                        "FLEET_QUEUE"
+                    ]
+                },
+                "event_id": {
+                    "type": "string",
+                    "description": "ID do evento"
+                },
+                "date": {
+                    "type": "string",
+                    "description": "Data do evento (em UTC)",
+                    "example": "2020-06-26 22:24:30"
+                }
+            }
+        },
+        "EventOrderResourceCreated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/WebhookEvent",
+                    "title": "ORDER_CREATED",
+                    "type": "object",
+                    "properties": {
+                        "event_context": {
+                            "type": "string",
+                            "description": "Token da operação",
+                            "example": "1234567890"
+                        },
+                        "customer": {
+                            "type": "string",
+                            "description": "Token do embarcador",
+                            "example": "1234567890"
+                        },
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "order": {
+                                    "type": "object",
+                                    "properties": {
+                                        "addresses": {
+                                            "type": "object",
+                                            "properties": {
+                                                "pickup": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string",
+                                                            "description": "Nome do ponto de coleta",
+                                                            "example": "BIM FILMES"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "description": "Telefone do ponto de coleta",
+                                                            "example": "1234567890"
+                                                        },
+                                                        "address": {
+                                                            "type": "string",
+                                                            "description": "Endereço do ponto de coleta",
+                                                            "example": "Rua dos Andradas, 1155 - Centro Histórico, Porto Alegre - RS, Brasil"
+                                                        },
+                                                        "lat": {
+                                                            "type": "number",
+                                                            "description": "Latitude do ponto de coleta",
+                                                            "example": -30.030161
+                                                        },
+                                                        "lng": {
+                                                            "type": "number",
+                                                            "description": "Longitude do ponto de coleta",
+                                                            "example": -51.230108
+                                                        },
+                                                        "comp": {
+                                                            "type": "string",
+                                                            "description": "Complemento do ponto de coleta",
+                                                            "example": "5858"
+                                                        },
+                                                        "neighborhood": {
+                                                            "type": "string",
+                                                            "description": "Bairro do ponto de coleta",
+                                                            "example": "Centro Histórico"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "description": "Cidade do ponto de coleta",
+                                                            "example": "Porto Alegre"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "description": "Estado do ponto de coleta",
+                                                            "example": "RS"
+                                                        },
+                                                        "country": {
+                                                            "type": "string",
+                                                            "description": "País do ponto de coleta",
+                                                            "example": "Brasil"
+                                                        },
+                                                        "obs": {
+                                                            "type": "string",
+                                                            "description": "Observações do ponto de coleta",
+                                                            "example": "Observações adicionais"
+                                                        }
+                                                    }
+                                                },
+                                                "dropoff": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string",
+                                                            "description": "Nome do ponto de entrega",
+                                                            "example": "BIM FILMES"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "description": "Telefone do ponto de entrega",
+                                                            "example": "1234567890"
+                                                        },
+                                                        "address": {
+                                                            "type": "string",
+                                                            "description": "Endereço do ponto de entrega",
+                                                            "example": "Rua dos Andradas, 1155 - Centro Histórico, Porto Alegre - RS, Brasil"
+                                                        },
+                                                        "lat": {
+                                                            "type": "number",
+                                                            "description": "Latitude do ponto de entrega",
+                                                            "example": -30.030161
+                                                        },
+                                                        "lng": {
+                                                            "type": "number",
+                                                            "description": "Longitude do ponto de entrega",
+                                                            "example": -51.230108
+                                                        },
+                                                        "comp": {
+                                                            "type": "string",
+                                                            "description": "Complemento do ponto de entrega",
+                                                            "example": "5858"
+                                                        },
+                                                        "neighborhood": {
+                                                            "type": "string",
+                                                            "description": "Bairro do ponto de entrega",
+                                                            "example": "Centro Histórico"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "description": "Cidade do ponto de entrega",
+                                                            "example": "Porto Alegre"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "description": "Estado do ponto de entrega",
+                                                            "example": "RS"
+                                                        },
+                                                        "country": {
+                                                            "type": "string",
+                                                            "description": "País do ponto de entrega",
+                                                            "example": "Brasil"
+                                                        },
+                                                        "obs": {
+                                                            "type": "string",
+                                                            "description": "Observações do ponto de entrega",
+                                                            "example": "Observações adicionais"
+                                                        }
+                                                    }
+                                                },
+                                                "orderDetails": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "client": {
+                                                            "type": "string",
+                                                            "description": "Token da operação",
+                                                            "example": "1234567890"
+                                                        },
+                                                        "subclient": {
+                                                            "type": "string",
+                                                            "description": "Token do embarcador",
+                                                            "example": "1234567890"
+                                                        },
+                                                        "tracking": {
+                                                            "type": "string",
+                                                            "description": "Identificação da entrega",
+                                                            "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                                        },
+                                                        "number": {
+                                                            "type": "integer",
+                                                            "description": "Número da entrega",
+                                                            "example": 1234567890
+                                                        },
+                                                        "cod": {
+                                                            "type": "string",
+                                                            "description": "Código da entrega",
+                                                            "example": "1234567890"
+                                                        },
+                                                        "requester": {
+                                                            "type": "string",
+                                                            "description": "Requerente da entrega",
+                                                            "example": "1234567890"
+                                                        },
+                                                        "size": {
+                                                            "type": "integer",
+                                                            "description": "Tamanho da entrega",
+                                                            "example": 0
+                                                        },
+                                                        "status": {
+                                                            "type": "integer",
+                                                            "description": "Status da entrega",
+                                                            "example": 1
+                                                        },
+                                                        "fleet": {
+                                                            "type": "integer",
+                                                            "description": "ID da frota",
+                                                            "example": 1
+                                                        },
+                                                        "scheduled": {
+                                                            "type": "integer",
+                                                            "description": "ID do agendamento",
+                                                            "example": 1
+                                                        },
+                                                        "sign": {
+                                                            "type": "integer",
+                                                            "description": "ID do signatário",
+                                                            "example": 1
+                                                        },
+                                                        "signName": {
+                                                            "type": "string",
+                                                            "description": "Nome do signatário",
+                                                            "example": "John Doe"
+                                                        },
+                                                        "signTime": {
+                                                            "type": "string",
+                                                            "description": "Data e hora do signatário",
+                                                            "example": "2020-06-26 22:24:30"
+                                                        },
+                                                        "price": {
+                                                            "type": "number",
+                                                            "description": "Preço da entrega",
+                                                            "example": 100
+                                                        },
+                                                        "waitingPrice": {
+                                                            "type": "number",
+                                                            "description": "Preço da entrega em espera",
+                                                            "example": 100
+                                                        },
+                                                        "costCenter": {
+                                                            "type": "integer",
+                                                            "description": "ID do centro de custo",
+                                                            "example": 1
+                                                        },
+                                                        "opObs": {
+                                                            "type": "string",
+                                                            "description": "Observações da operação",
+                                                            "example": "Observações adicionais"
+                                                        },
+                                                        "optionalService": {
+                                                            "type": "integer",
+                                                            "description": "ID do serviço opcional",
+                                                            "example": 1
+                                                        },
+                                                        "vehicle": {
+                                                            "type": "integer",
+                                                            "description": "ID do veículo",
+                                                            "example": 1
+                                                        },
+                                                        "return": {
+                                                            "type": "integer",
+                                                            "description": "ID do retorno",
+                                                            "example": 1
+                                                        },
+                                                        "paymentType": {
+                                                            "type": "integer",
+                                                            "description": "ID do tipo de pagamento",
+                                                            "example": 1
+                                                        },
+                                                        "distance": {
+                                                            "type": "number",
+                                                            "description": "Distância da entrega",
+                                                            "example": 100
+                                                        },
+                                                        "times": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "created": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora da criação da entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                },
+                                                                "schedule": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora do agendamento da entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                },
+                                                                "pickup": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora da coleta da entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                },
+                                                                "started": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora do início da entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                },
+                                                                "dropoff": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora da entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                },
+                                                                "closed": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora da fechamento da entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                },
+                                                                "eta": {
+                                                                    "type": "string",
+                                                                    "description": "Data e hora da estimativa de entrega",
+                                                                    "example": "2020-06-26 22:24:30"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventOrderResourceUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/EventOrderResourceCreated",
+                    "title": "ORDER_UPDATED"
+                }
+            ]
+        },
+        "EventOrderResourceStatusUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/WebhookEvent"
+                },
+                {
+                    "title": "ORDER_STATUS_UPDATED",
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "event_context": {
+                            "type": "string",
+                            "description": "Token da operação",
+                            "example": "1234567890"
+                        },
+                        "customer": {
+                            "type": "string",
+                            "description": "Token do embarcador",
+                            "example": "1234567890"
+                        }
+                    }
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "tracking_code": {
+                                    "type": "string",
+                                    "description": "Identificação da entrega",
+                                    "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                },
+                                "old_status": {
+                                    "type": "string",
+                                    "description": "Status anterior da entrega",
+                                    "example": "Novo"
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "description": "Status da entrega",
+                                    "example": "Iniciado"
+                                },
+                                "trouble": {
+                                    "type": "boolean",
+                                    "description": "Indica se a entrega tem problema",
+                                    "example": false
+                                },
+                                "trouble_description": {
+                                    "type": "string",
+                                    "description": "Descrição do problema da entrega",
+                                    "example": "none"
+                                },
+                                "fleet_id": {
+                                    "type": "string",
+                                    "description": "ID do entregador",
+                                    "example": "1209"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventOrderResourceDriverUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/WebhookEvent",
+                    "title": "ORDER_DRIVER_UPDATED",
+                    "type": "object",
+                    "properties": {
+                        "event_context": {
+                            "type": "string",
+                            "description": "Token da operação",
+                            "example": "1234567890"
+                        },
+                        "customer": {
+                            "type": "string",
+                            "description": "Token do embarcador",
+                            "example": "1234567890"
+                        },
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "tracking_code": {
+                                    "type": "string",
+                                    "description": "Identificação da entrega",
+                                    "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                },
+                                "old_driver": {
+                                    "type": "object",
+                                    "description": "Antigo entregador. ```Null``` se a entrega estava sem entregador.",
+                                    "example": null
+                                },
+                                "new_driver": {
+                                    "$ref": "#/components/schemas/DriverObject",
+                                    "description": "Novo entregador. ```Null``` se a entrega foi desassociada do antigo entregador."
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventClientResourceCreatedOrUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/WebhookEvent"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "event_context": {
+                            "type": "string",
+                            "description": "Token da operação",
+                            "example": "1234567890"
+                        }
+                    }
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "client": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "description": "Token do cliente",
+                                            "example": "1234567890"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "Nome do cliente",
+                                            "example": "John Doe"
+                                        },
+                                        "razaoSocial": {
+                                            "type": "string",
+                                            "description": "Razão social do cliente",
+                                            "example": "John Doe"
+                                        },
+                                        "personType": {
+                                            "type": "string",
+                                            "description": "Tipo de pessoa do cliente",
+                                            "example": "Pessoa física"
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "description": "CPF do cliente",
+                                            "example": "1234567890"
+                                        },
+                                        "cnpj": {
+                                            "type": "string",
+                                            "description": "CNPJ do cliente",
+                                            "example": "1234567890"
+                                        },
+                                        "incricaoEstadual": {
+                                            "type": "string",
+                                            "description": "Inscrição estadual do cliente",
+                                            "example": ""
+                                        },
+                                        "incricaoMunicipal": {
+                                            "type": "string",
+                                            "description": "Inscrição municipal do cliente",
+                                            "example": ""
+                                        },
+                                        "address": {
+                                            "type": "string",
+                                            "description": "Endereço do cliente",
+                                            "example": "Rua Riachuelo 269"
+                                        },
+                                        "complement": {
+                                            "type": "string",
+                                            "description": "Complemento do endereço do cliente",
+                                            "example": "301"
+                                        },
+                                        "lat": {
+                                            "type": "string",
+                                            "description": "Latitude do endereço do cliente",
+                                            "example": "-16.0791420"
+                                        },
+                                        "lng": {
+                                            "type": "string",
+                                            "description": "Longitude do endereço do cliente",
+                                            "example": "-49.8565280"
+                                        },
+                                        "neighborhood": {
+                                            "type": "string",
+                                            "description": "Bairro do endereço do cliente",
+                                            "example": "Centro"
+                                        },
+                                        "zipCode": {
+                                            "type": "string",
+                                            "description": "CEP do endereço do cliente",
+                                            "example": "90417-815"
+                                        },
+                                        "city": {
+                                            "type": "string",
+                                            "description": "Cidade do endereço do cliente",
+                                            "example": "Porto Alegre"
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "description": "Estado do endereço do cliente",
+                                            "example": "RS"
+                                        },
+                                        "country": {
+                                            "type": "string",
+                                            "description": "País do endereço do cliente",
+                                            "example": "Brasil"
+                                        },
+                                        "contactName": {
+                                            "type": "string",
+                                            "description": "Nome do contato do cliente",
+                                            "example": "John Doe"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "description": "Telefone do cliente",
+                                            "example": "1234567890"
+                                        },
+                                        "mobilePhone": {
+                                            "type": "string",
+                                            "description": "Celular do cliente",
+                                            "example": "1234567890"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "description": "Email do cliente",
+                                            "example": "john@example.com"
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "description": "Status do cliente",
+                                            "example": 1
+                                        },
+                                        "signupDate": {
+                                            "type": "string",
+                                            "description": "Data de cadastro do cliente (em UTC)",
+                                            "example": "2020-06-26 22:24:30"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventClientResourceStatusUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/EventClientResourceCreatedOrUpdated"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "new_status": {
+                                    "type": "string",
+                                    "description": "Status do cliente",
+                                    "example": "INACTIVE"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventDriverResourceCreatedOrUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/WebhookEvent"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "event_context": {
+                            "type": "string",
+                            "description": "Token da operação",
+                            "example": "1234567890"
+                        }
+                    }
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "driver": {
+                                    "$ref": "#/components/schemas/DriverObject",
+                                    "description": "Entregador"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventDriverResourceStatusUpdated": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/EventDriverResourceCreatedOrUpdated"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "new_status": {
+                                    "type": "string",
+                                    "description": "Status do entregador",
+                                    "example": "INACTIVE"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "EventFleetQueue": {
+            "description": "Resource",
+            "allOf": [
+                {
+                    "$ref": "#/components/schemas/WebhookEvent"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "resource": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "description": "Status da fila do embarcador",
+                                    "example": "left"
+                                },
+                                "fleet_id": {
+                                    "type": "integer",
+                                    "description": "ID do embarcador",
+                                    "example": 1209
+                                },
+                                "fleet_name": {
+                                    "type": "string",
+                                    "description": "Nome do embarcador",
+                                    "example": "Embarcador Teste"
+                                },
+                                "orders_count": {
+                                    "type": "integer",
+                                    "description": "Quantidade de entregas na fila do embarcador",
+                                    "example": 10
+                                },
+                                "tracking_codes": {
+                                    "type": "array",
+                                    "description": "Identificações das entregas na fila do embarcador",
+                                    "example": [
+                                        "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a",
+                                        "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2b"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "events": {
+        "/": {
+            "post": {
+                "operationId": "events",
+                "tags": [
+                    "Webhooks"
+                ],
+                "summary": "Eventos de notificação",
+                "description": "Trabalhamos com webhooks para notificações de eventos do sistema Husky. Para receber as notificações, é necessário cadastrar a URL de destino e o tipo de evento que será notificado.\n\n**Eventos disponíveis e o momento em que o evento será notificado:**\n**Eventos de Entrega:**\n> `ORDER_CREATED`: Quando uma nova entrega é criada\\\n> `ORDER_UPDATED`: Quando a entrega é atualizada\\\n> `ORDER_STATUS_UPDATED`: Quando o status da entrega é atualizado (ex: coletando, entregando, etc)\\\n> `ORDER_DRIVER_UPDATED`: Quando alterado o entregador da entrega\\\n**Eventos de Entregador:**\n> `FLEET_QUEUE`: Quando o entregador sai da fila do embarcador\\\n> `DRIVER_CREATED`: Quando um novo entregador é criado\\\n> `DRIVER_UPDATED`: Quando alterado os dados do entregador\\\n> `DRIVER_STATUS_UPDATED`: Quando alterado o status do entregador\\\n**Eventos de Embarcador:**\n> `CLIENT_CREATED`: Quando um novo embarcador é criado\\\n> `CLIENT_UPDATED`: Quando alterado os dados do embarcador\\\n> `CLIENT_STATUS_UPDATED`: Quando alterado o status do embarcador",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WebhookEvent"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

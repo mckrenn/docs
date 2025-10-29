@@ -1,0 +1,111 @@
+{
+    "path": "/updateOrderStatus",
+    "methods": {
+        "post": {
+            "operationId": "updateOrderStatus",
+            "tags": [
+                "Entregas"
+            ],
+            "summary": "Alteração de Status",
+            "description": "Altera o status de uma entrega já existente.\n<br><br>\n**Referências de status (ID - STATUS):**\n> `1` - Novo \\\n> `2` - Iniciado \\\n> `3` - Coletando \\\n> `4` - Entregando \\\n> `5` - No Cliente \\\n> `6` - Retornando \\\n> `7` - Finalizado \\\n> `8` - Cancelado \\\n> `9` - Não Finalizado",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "tracking",
+                                "status"
+                            ],
+                            "properties": {
+                                "tracking": {
+                                    "description": "Código de identificação da entrega",
+                                    "type": "string",
+                                    "example": "TRACKING_CODE"
+                                },
+                                "status": {
+                                    "description": "ID do status para alteração",
+                                    "type": "integer",
+                                    "example": 2
+                                },
+                                "reason": {
+                                    "description": "Código do motivo de não finalização (obrigatório para status 9). Consulte [/unfinishedStatusReasons](#/unfinishedStatusReasons) para obter a lista de motivos disponíveis.",
+                                    "type": "integer",
+                                    "example": 1
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Status alterado com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "success": {
+                                        "type": "integer",
+                                        "description": "Código de status da resposta. 1 = Sucesso",
+                                        "example": 1
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Mensagem de retorno da solicitação",
+                                        "example": "Status Atualizado!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro ao alterar status",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "success": {
+                                        "type": "integer",
+                                        "description": "Código de erro",
+                                        "example": 1
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Mensagem de erro",
+                                        "example": "O tracking da entrega é inválido, ele deve ser alfanumérico com 64 caracteres"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

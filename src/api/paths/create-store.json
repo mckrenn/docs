@@ -1,0 +1,204 @@
+{
+    "path": "/createStore",
+    "methods": {
+        "post": {
+            "operationId": "createStore",
+            "tags": [
+                "Embarcadores"
+            ],
+            "summary": "Criação de embarcador",
+            "description": "Cria um embarcador no sistema.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "basicInfo",
+                                "address"
+                            ],
+                            "properties": {
+                                "basicInfo": {
+                                    "description": "Informações básicas do embarcador",
+                                    "required": [
+                                        "name",
+                                        "phone",
+                                        "user",
+                                        "pass",
+                                        "label",
+                                        "active"
+                                    ],
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "description": "Nome do embarcador",
+                                            "example": "Embarcador Teste"
+                                        },
+                                        "phone": {
+                                            "type": "string",
+                                            "description": "Telefone do embarcador",
+                                            "example": "51323366656"
+                                        },
+                                        "user": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "description": "E-mail do embarcador",
+                                            "example": "loja.1tes3t2e@lojateste.com"
+                                        },
+                                        "pass": {
+                                            "type": "string",
+                                            "description": "Senha do embarcador",
+                                            "example": "1234"
+                                        },
+                                        "label": {
+                                            "type": "string",
+                                            "description": "Label do embarcador",
+                                            "example": "Teste"
+                                        },
+                                        "active": {
+                                            "type": "boolean",
+                                            "description": "Define se o embarcador está ativo",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "address": {
+                                    "description": "Endereço do embarcador",
+                                    "required": [
+                                        "street",
+                                        "comp",
+                                        "lat",
+                                        "lng",
+                                        "neighborhood",
+                                        "city",
+                                        "state",
+                                        "country"
+                                    ],
+                                    "properties": {
+                                        "street": {
+                                            "type": "string",
+                                            "description": "Endereço do embarcador",
+                                            "example": "Rua dos Andradas, 1234"
+                                        },
+                                        "comp": {
+                                            "type": "string",
+                                            "description": "Complemento do endereço do embarcador",
+                                            "example": "Sala 1201"
+                                        },
+                                        "lat": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "description": "Latitude do endereço do embarcador",
+                                            "example": -45.4648
+                                        },
+                                        "lng": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "description": "Longitude do endereço do embarcador",
+                                            "example": -45.5468
+                                        },
+                                        "neighborhood": {
+                                            "type": "string",
+                                            "description": "Bairro do endereço do embarcador",
+                                            "example": "Centro Histórico"
+                                        },
+                                        "city": {
+                                            "type": "string",
+                                            "description": "Cidade do endereço do embarcador",
+                                            "example": "Porto Alegre"
+                                        },
+                                        "state": {
+                                            "type": "string",
+                                            "description": "Estado do endereço do embarcador",
+                                            "example": "Rio Grande do Sul"
+                                        },
+                                        "country": {
+                                            "type": "string",
+                                            "description": "País do endereço do embarcador",
+                                            "example": "Brasil"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Requisição processada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": {
+                                        "type": "integer",
+                                        "description": "Qualquer valor diferente de 1 indica que ocorreu um erro na criação do embarcador. Em caso de erro, valide o campo message para mais detalhes.",
+                                        "example": 1
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Mensagem de retorno da solicitação",
+                                        "example": "Solicitação recebida com sucesso!"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "description": "Token do embarcador criado",
+                                        "example": "4156165165165165165165165165165165165165165165165165165165165165"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro ao criar embarcador",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "description": "Código do erro",
+                                        "example": 400
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Mensagem de erro",
+                                        "example": "É necessário informar nome do embarcador para cadastro."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

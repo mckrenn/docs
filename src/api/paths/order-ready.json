@@ -1,0 +1,102 @@
+{
+    "path": "/orderReady",
+    "methods": {
+        "post": {
+            "operationId": "orderReady",
+            "tags": [
+                "Entregas"
+            ],
+            "summary": "Pedido Pronto",
+            "description": "Informa que o pedido já está pronto para ser coletado pelo entregador.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "tracking",
+                                "ready"
+                            ],
+                            "properties": {
+                                "tracking": {
+                                    "description": "Identificador da entrega (tracking code)",
+                                    "type": "string",
+                                    "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                },
+                                "ready": {
+                                    "description": "Define se a entrega está pronta para ser coletada pelo entregador.\n<br>\ntrue = Entrega pronta\n<br>\nfalse = Entrega não pronta",
+                                    "type": "boolean",
+                                    "example": true
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Entrega atualizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "example": 200
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Entrega atualizada com sucesso!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro ao atualizar entrega",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "example": 400
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Erro ao atualizar entrega"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

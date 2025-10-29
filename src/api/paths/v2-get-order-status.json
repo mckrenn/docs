@@ -1,0 +1,209 @@
+{
+    "path": "/v2/getOrderStatus",
+    "methods": {
+        "post": {
+            "operationId": "v2/getOrderStatus",
+            "tags": [
+                "Entregas"
+            ],
+            "summary": "Consulta de Status da entrega",
+            "description": "Este endpoint recebe via POST um campo tracking_codes com um array de tracking de entregas e retorna o status delas.\n<br><br>\n**Por quanto tempo que as entregas estão disponíveis para consulta?**\n<br>\nEntregas em aberto sempre estão disponiveis para consulta. Entregas finalizadas estão disponíveis em um range de 7 dias \n(3 dias antes da data atual e 3 dias após a data atual) da data de agendamento da entrega. Por exemplo: uma entrega finalizada e que havia sido agendada para o \ndia 13/02/2025 só poderá ser consultada no endpoint até o dia 16/02/2025.\n<br>\nO payload de resposta retorna o motivo de Não Finalizado na sua forma de código. \nO código segue os Motivos de Status Não Finalizado que podem ser obtidos no endpoint /unfinishedStatusReasons que hoje está publico na documentação.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "tracking_codes"
+                            ],
+                            "properties": {
+                                "tracking_codes": {
+                                    "description": "Array de identificadores de entregas",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Consulta realizada com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "success": {
+                                        "description": "Código de status da resposta. 1 = Sucesso",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "message": {
+                                        "description": "Mensagem de retorno da requisição",
+                                        "type": "string",
+                                        "example": "Requisição realizada com sucesso."
+                                    },
+                                    "found": {
+                                        "description": "Trackings encontrados",
+                                        "type": "object",
+                                        "properties": {
+                                            "orderTracking": {
+                                                "description": "Identificador da entrega",
+                                                "type": "string",
+                                                "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                            },
+                                            "orderId": {
+                                                "description": "Número da entrega na operação",
+                                                "type": "string",
+                                                "example": "1"
+                                            },
+                                            "status": {
+                                                "description": "Status da entrega",
+                                                "type": "string",
+                                                "example": "Não Finalizado"
+                                            },
+                                            "updatedAt": {
+                                                "description": "Data de atualização da entrega",
+                                                "type": "string",
+                                                "example": "2025-01-28 16:37:43"
+                                            },
+                                            "reason": {
+                                                "description": "Código do motivo de Não Finalização da entrega",
+                                                "type": "integer",
+                                                "example": 5
+                                            },
+                                            "fleet": {
+                                                "description": "Informações do entregador",
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "description": "Identificador do entregador",
+                                                        "type": "integer",
+                                                        "example": 2033
+                                                    },
+                                                    "name": {
+                                                        "description": "Nome do entregador",
+                                                        "type": "string",
+                                                        "example": "Matheus Costa K."
+                                                    }
+                                                }
+                                            },
+                                            "status_history": {
+                                                "description": "Histórico de status da entrega",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "status": {
+                                                            "description": "Status da entrega",
+                                                            "type": "string",
+                                                            "example": "Em Aberto"
+                                                        },
+                                                        "timestamp": {
+                                                            "description": "Data de atualização do status da entrega",
+                                                            "type": "string",
+                                                            "example": "2025-01-27 13:11:45"
+                                                        },
+                                                        "latitude": {
+                                                            "description": "Coordenada de latitude da alteração de status da entrega",
+                                                            "type": "number",
+                                                            "example": 123.123123
+                                                        },
+                                                        "longitude": {
+                                                            "description": "Coordenada de longitude da alteração de status da entrega",
+                                                            "type": "number",
+                                                            "example": 123.123123
+                                                        },
+                                                        "attachments": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "photo",
+                                                                        "description": "Tipo de anexo. photo = Foto, signature = Assinatura"
+                                                                    },
+                                                                    "fileUrl": {
+                                                                        "description": "URL do anexo",
+                                                                        "type": "string",
+                                                                        "example": "https://example.s3.sa-east-1.amazonaws.com/example.jpg"
+                                                                    },
+                                                                    "notFound": {
+                                                                        "description": "Trackings não encontrados",
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "description": "Identificador da entrega não encontrado",
+                                                                            "type": "string",
+                                                                            "example": "051aa70b607f97beeba3f5f9ee2a6b984a9f1489c3a74d6083afc59e1685cb2a"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro na consulta",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "description": "Código de status da resposta",
+                                            "type": "integer",
+                                            "example": 0
+                                        },
+                                        "message": {
+                                            "description": "Mensagem de retorno do erro",
+                                            "type": "string",
+                                            "example": "O campo 'tracking_codes' não foi informado"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                },
+                "429": {
+                    "description": "Limite de requisições atingido"
+                }
+            },
+            "security": [
+                {
+                    "TokenHeader": []
+                }
+            ]
+        }
+    }
+}

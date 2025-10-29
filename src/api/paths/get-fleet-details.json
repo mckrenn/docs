@@ -1,0 +1,103 @@
+{
+    "path": "/getFleetDetails",
+    "methods": {
+        "get": {
+            "operationId": "getFleetDetails",
+            "tags": [
+                "Entregadores"
+            ],
+            "summary": "Informações de entregador",
+            "description": "Obtém informações de um entregador com base no seu ID.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                },
+                {
+                    "name": "fleetId",
+                    "in": "query",
+                    "description": "Identificador do entregador",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Informações do entregador obtidas com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "fleet_driver": {
+                                            "type": "string",
+                                            "description": "Nome do entregador",
+                                            "example": "João da Silva"
+                                        },
+                                        "fleet_alias": {
+                                            "type": "string",
+                                            "description": "Apelido do entregador",
+                                            "example": "joão"
+                                        },
+                                        "fleet_photo": {
+                                            "type": "string",
+                                            "example": "https://gohusky.s3.sa-east-1.amazonaws.com/389d0e3ff95784714a04fd93c4bf14db78e39dcf6a96655270bff5fa541df08e.png"
+                                        },
+                                        "fleet_plate": {
+                                            "type": "string",
+                                            "description": "Placa do entregador",
+                                            "example": ""
+                                        },
+                                        "fleet_cel": {
+                                            "type": "string",
+                                            "description": "Celular do entregador",
+                                            "example": "51996766591"
+                                        },
+                                        "fleet_app_version": {
+                                            "type": "string",
+                                            "description": "Versão do app do entregador",
+                                            "example": "1.6.8"
+                                        },
+                                        "fleet_rg": {
+                                            "type": "string",
+                                            "description": "RG do entregador",
+                                            "example": ""
+                                        },
+                                        "fleet_cpf": {
+                                            "type": "string",
+                                            "description": "CPF do entregador",
+                                            "example": ""
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "ID do entregador não informado"
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}

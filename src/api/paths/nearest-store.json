@@ -1,0 +1,119 @@
+{
+    "path": "/nearestStore",
+    "methods": {
+        "post": {
+            "operationId": "nearestStore",
+            "tags": [
+                "Embarcadores"
+            ],
+            "summary": "Localização de embarcador",
+            "description": "Busca os embarcadores que atendem a uma determinada localização baseada nas coordenadas (latitude e longitude) informadas.",
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/live_mode"
+                },
+                {
+                    "$ref": "#/components/parameters/customer"
+                }
+            ],
+            "requestBody": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "orderInfo"
+                            ],
+                            "properties": {
+                                "orderInfo": {
+                                    "type": "object",
+                                    "required": [
+                                        "lat",
+                                        "lng"
+                                    ],
+                                    "properties": {
+                                        "lat": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "description": "Coordenada latitude do endereço de entrega",
+                                            "example": -30.029819
+                                        },
+                                        "lng": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "description": "Coordenada longitude do endereço de entrega",
+                                            "example": -51.229321
+                                        },
+                                        "label": {
+                                            "type": "string",
+                                            "description": "Categoria do embarcador",
+                                            "example": "Label opcional"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Embarcadores encontrados com sucesso",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "totalDistance": {
+                                        "description": "Distância do embarcador em metros",
+                                        "type": "number"
+                                    },
+                                    "area": {
+                                        "description": "Nome da zona onde o embarcador está",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Erro ao localizar embarcador",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "description": "Código de status do erro",
+                                        "example": 0
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Mensagem de retorno do erro",
+                                        "example": "O campo \"lat\" não foi informado"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "$ref": "#/components/responses/401"
+                },
+                "404": {
+                    "$ref": "#/components/responses/404"
+                },
+                "405": {
+                    "$ref": "#/components/responses/405"
+                }
+            },
+            "security": [
+                {
+                    "TokenQuery": []
+                }
+            ]
+        }
+    }
+}
