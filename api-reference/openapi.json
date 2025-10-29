@@ -34,7 +34,7 @@
           "all"
         ],
         "example": "ORDER_STATUS_UPDATED",
-        "description": "Tipo de evento para notificação. Para mais detalhes sobre os possíveis eventos, consulte a seção [Webhooks](#tag/Webhooks).\n<br>\nSe informado ```all```, todos os eventos que existem hoje (e futuros) serão notificados."
+        "description": "Tipo de evento para notificação. Para mais detalhes sobre os possíveis eventos, consulte a seção [Webhooks](/api-reference/webhooks/webhook).\n<br>\nSe informado ```all```, todos os eventos que existem hoje (e futuros) serão notificados."
       },
       "DriverObject": {
         "type": "object",
@@ -1510,19 +1510,19 @@
         },
         "responses": {
           "200": {
-            "description": "Requisição processada com sucesso. \n\n**IMPORTANTE:** se o valor do campo 'success' for diferente de 1, houve um erro na criação da entrega. Em caso de erro, valide o campo 'message' para mais detalhes.",
+            "description": "Requisição processada com sucesso. \n\n**IMPORTANTE:** se o valor do campo 'success' for diferente de `1`, houve um erro na criação da entrega. Em caso de erro, valide o campo 'message' para mais detalhes.",
             "content": {
               "application/json": {
                 "schema": {
                   "oneOf": [
                     {
                       "title": "Sucesso",
-                      "description": "Propriedade 'success' igual a 1 indica que a solicitação foi processada com sucesso.",
+                      "description": "Entrega criada com sucesso.",
                       "type": "array",
                       "items": {
                         "properties": {
                           "success": {
-                            "description": "**IMPORTANTE:** se o valor for diferente de 1, houve um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
+                            "description": "Indica se a requisição foi processada com sucesso. `1` = Sucesso, qualquer outro valor indica que houve um erro.",
                             "type": "integer",
                             "example": 1
                           },
@@ -1543,18 +1543,18 @@
                           }
                         },
                         "type": "object"
-                      }    
+                      }
                     },
                     {
                       "title": "Erro",
-                      "description": "Propriedade 'success' diferente de 1 indica que ocorreu um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
+                      "description": "Houve um erro na criação da entrega, valide o campo 'message' para mais detalhes.",
                       "type": "array",
                       "items": {
                         "properties": {
                           "success": {
-                            "description": "Qualquer valor diferente de 1 indica que ocorreu um erro na criação da entrega. Em caso de erro, valide o campo message para mais detalhes.",
+                            "description": "Indica se a requisição foi processada com sucesso. `1` = Sucesso, qualquer outro valor indica que houve um erro.",
                             "type": "integer",
-                            "example": 3
+                            "example": 1
                           },
                           "message": {
                             "description": "Mensagem de retorno da solicitação",
@@ -1563,7 +1563,7 @@
                           }
                         },
                         "type": "object"
-                      }    
+                      }
                     }
                   ]
                 }
